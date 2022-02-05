@@ -284,7 +284,11 @@ bool PLH::x64Detour::hook() {
 		uint64_t min = (uint64_t)AlignDownwards(calc_2gb_below(m_fnAddress), 0x10000);
 		uint64_t region = (uint64_t)m_allocator.allocate(min, max);
 		if (!region) {
-			Log::log("VirtualAlloc2 failed to find a region near function", ErrorLevel::SEV);
+			std::stringstream expl;
+			expl << "VirtualAlloc2 failed to find a region near function";
+			expl << " min=" << std::hex << min;
+			expl << " max=" << std::hex << max;
+			Log::log(expl.str(), ErrorLevel::SEV);
 			return false;
 		}
 

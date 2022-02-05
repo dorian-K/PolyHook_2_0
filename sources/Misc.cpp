@@ -144,11 +144,13 @@ uint64_t PLH::boundAllocLegacy(uint64_t start, uint64_t end, uint64_t size)
 
 uint64_t PLH::calc_2gb_below(uint64_t address)
 {
-	return (address > (uint64_t)0x7ff80000) ? address - 0x7ff80000 : 0x80000;
+	return (address > (uint64_t)0x7fff0000) ? address - 0x7ff80000 : 0x80000;
 }
 
 uint64_t PLH::calc_2gb_above(uint64_t address)
 {
+
+	// return (address < (uint64_t)0xffffffff80000000) ? address + 0x7ff80000 : (uint64_t)0xfffffffffff80000;
 	return (address < (uint64_t)0xffffffff80000000) ? address + 0x7ff80000 : (uint64_t)0xfffffffffff80000;
 }
 
