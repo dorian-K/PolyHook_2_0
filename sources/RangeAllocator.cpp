@@ -128,19 +128,23 @@ std::shared_ptr<PLH::FBAllocator> PLH::RangeAllocator::findOrInsertAllocator(uin
 
 char* PLH::RangeAllocator::allocate(uint64_t min, uint64_t max)
 {
-	uint64_t maxAppAddr = 1;
-	if(maxAppAddr == 1){
-		SYSTEM_INFO si;
-		memset(&si, 0, sizeof(si));
-		GetSystemInfo(&si);
-		maxAppAddr = reinterpret_cast<uint64_t>(si.lpMaximumApplicationAddress) - si.dwAllocationGranularity;
-	}
+	static uint64_t maxAppAddr = 1;
 	static bool is32 = sizeof(void*) == 4;
 	if (is32 && max > 0x7FFFFFFF) {
 		max = 0x7FFFFFFF; // allocator apis fail in 32bit above this range
-	}else if(max > maxAppAddr){
-		max = maxAppAddr;
-	}
+	}else {
+#if defined(POLYHOOK2_OS_WINDOWS)
+        if(maxAppAddr == 1){
+            SYSTEM_INFO si;
+            memset(&si, 0, sizeof(si));
+            GetSystemInfo(&si);
+            maxAppAddr = reinterpret_cast<uint64_t>(si.lpMaximumApplicationAddress) - si.dwAllocationGranularity;
+        }
+        if(max > maxAppAddr){
+            max = maxAppAddr;
+        }
+#endif
+    }
 
 	std::lock_guard<std::mutex> m_lock(m_mutex);
 	auto allocator = findOrInsertAllocator(min, max);
