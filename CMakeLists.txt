@@ -204,6 +204,7 @@ set(POLYHOOK_CORE_HEADERS ${PROJECT_SOURCE_DIR}/polyhook2/ADisassembler.hpp
 		${PROJECT_SOURCE_DIR}/polyhook2/Tests/TestEffectTracker.hpp
 		${PROJECT_SOURCE_DIR}/polyhook2/Tests/StackCanary.hpp
 		${PROJECT_SOURCE_DIR}/polyhook2/EventDispatcher.hpp
+		${PROJECT_SOURCE_DIR}/polyhook2/PolyHookOs.hpp
 		)
 install(FILES ${POLYHOOK_CORE_HEADERS} DESTINATION include/polyhook2)
 
